@@ -15,49 +15,55 @@ var sentences = [
 ];
 
 var lastr = sentences.length + 1,
-		scramble = document.getElementById('scramble');
+		scramble = document.getElementById('scramble'),
+		blocked = false;
 
 scramble.onclick = function() {
-	//Gerring a non-repeating random number
-	do {
-		var r = Math.floor((Math.random() * sentences.length) + 0);
-	} while(r == lastr);
-	lastr = r;
+	if(blocked == false) {
+		blocked = true;
+		//Gerring a non-repeating random number
+		do {
+			var r = Math.floor((Math.random() * sentences.length) + 0);
+		} while(r == lastr);
+		lastr = r;
 
-	//Checking if the string on the page or the new String are longer
-	if(sentences[r].length > scramble.innerHTML.length) {
-		var max = sentences[r].length;
-		var min = max;
-	} else {
-		var max = scramble.innerHTML.length;
-		var min = sentences[r].length;
-	}
+		//Checking if the string on the page or the new String are longer
+		if(sentences[r].length > scramble.innerHTML.length) {
+			var max = sentences[r].length;
+			var min = max;
+		} else {
+			var max = scramble.innerHTML.length;
+			var min = sentences[r].length;
+		}
 
-	//Changing the characters on a timer
-	var i = 0;
-	var j = 0;
-	var speed = 60;
-	function mainClock(i, j, max) {
-    setTimeout(function () {
-    	if(j < 3 && i < min) {
-    		scramble.innerHTML = scramble.innerHTML.replaceAt(i, randomLetter());
-    		j++;
-    		mainClock(i, j, max);
-    	} else {
-    		scramble.innerHTML = scramble.innerHTML.replaceAt(i, sentences[r][i]);
-	      if(i < min) {
-	      	i++
-	      } else {
-					max--;
-				}
-				if(i < max) {
-					j = 0;
-	      	mainClock(i, j, max);
-	      }
-    	}
-	  }, speed);
+		//Changing the characters on a timer
+		var i = 0;
+		var j = 0;
+		var speed = 60;
+		function mainClock(i, j, max) {
+	    setTimeout(function () {
+	    	if(j < 3 && i < min) {
+	    		scramble.innerHTML = scramble.innerHTML.replaceAt(i, randomLetter());
+	    		j++;
+	    		mainClock(i, j, max);
+	    	} else {
+	    		scramble.innerHTML = scramble.innerHTML.replaceAt(i, sentences[r][i]);
+		      if(i < min) {
+		      	i++
+		      } else {
+						max--;
+					}
+					if(i < max) {
+						j = 0;
+		      	mainClock(i, j, max);
+		      } else if(i == max) {
+		      	blocked = false;
+		      }
+	    	}
+		  }, speed);
+		}
+		mainClock(i, j, max);
 	}
-	mainClock(i, j, max);
 }
 
 //Replacing the String

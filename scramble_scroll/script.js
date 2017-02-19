@@ -1,9 +1,9 @@
 var sentences = [
+	"Hello World!",
 	"It's a trap!",
 	"Get back to work!",
 	"This is a Test?",
 	"This is not a Test!",
-	"Hello World!",
 	"God is dead!",
 	"Don't panic!",
 	"Get to the choppa!",
@@ -15,67 +15,125 @@ var sentences = [
 ];
 
 var lipsum = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
+var blocked = false;
 
+
+//Creating the divs
 document.addEventListener('DOMContentLoaded', function() {
 	for(var i = 0; i < sentences.length; i++) {
-		addDiv(i);
+		addElements(i);
 	}
-});
+}, false);
 
-function addDiv(i) {
-	var subHead = document.createElement('h2');
+function addElements(i) {
+	var subHead = document.createElement('h2'),
+			newDiv = document.createElement('div');
 	subHead.appendChild(document.createTextNode(sentences[i]));
-  var newDiv = document.createElement('div');
   newDiv.id = i;
+  newDiv.className = 'container';
   newDiv.appendChild(subHead);
   newDiv.appendChild(document.createTextNode(lipsum));
   document.getElementsByTagName('main')[0].appendChild(newDiv);
 }
 
+var container =  document.querySelectorAll('container');
+
+//Getting the scroll position of the div elements
+var timer = null;
+window.addEventListener('scroll', function() {
+  if(timer !== null) {
+    clearTimeout(timer);        
+  }
+  timer = setTimeout(function() {
+  	var closestId = getDistance(sentences.length);
+    if(document.getElementById(closestId).firstChild.innerHTML != document.getElementById('scramble').innerHTML) {
+			scrambleIt(closestId)
+		}
+  }, 200);
+}, false);
+
+function getDistance(max) {
+	var values = [];
+	for(var i = 0; i < max; i++) {
+		var headPos = document.getElementById('scramble').getBoundingClientRect(),
+  			elemPos = document.getElementById(i).getBoundingClientRect(),
+  			offset = elemPos.top - headPos.bottom;
+  	values.push(offset);
+  	if(i == max - 1) {
+      var curr = values[0];
+      var best = 0;
+      var diff = Math.abs (curr + 90);
+      for (var j = 0; j < values.length; j++) {
+        var newdiff = Math.abs (values[j] + 90);
+        if (newdiff < diff) {
+          diff = newdiff;
+          curr = values[j];
+          best = j;
+        }
+      }
+      return best;
+  	}
+	}
+}
+
+//Scrambing
 var lastr = sentences.length + 1,
 		scramble = document.getElementById('scramble');
 
 scramble.onclick = function() {
-	//Gerring a non-repeating random number
-	do {
-		var r = Math.floor((Math.random() * sentences.length) + 0);
-	} while(r == lastr);
-	lastr = r;
+	scrambleIt(false);
+}
 
-	//Checking if the string on the page or the new String are longer
-	if(sentences[r].length > scramble.innerHTML.length) {
-		var max = sentences[r].length;
-		var min = max;
-	} else {
-		var max = scramble.innerHTML.length;
-		var min = sentences[r].length;
-	}
+function scrambleIt(string) {
+	if(blocked == false) {
+		blocked = true;
+		//Getting a non-repeating random number if required
+		if(string == false) {
+			do {
+				var r = Math.floor((Math.random() * sentences.length) + 0);
+			} while(r == lastr);
+			lastr = r;
+		} else {
+			r = string;
+		}
 
-	//Changing the characters on a timer
-	var i = 0;
-	var j = 0;
-	var speed = 60;
-	function mainClock(i, j, max) {
-    setTimeout(function () {
-    	if(j < 3 && i < min) {
-    		scramble.innerHTML = scramble.innerHTML.replaceAt(i, randomLetter());
-    		j++;
-    		mainClock(i, j, max);
-    	} else {
-    		scramble.innerHTML = scramble.innerHTML.replaceAt(i, sentences[r][i]);
-	      if(i < min) {
-	      	i++
-	      } else {
-					max--;
-				}
-				if(i < max) {
-					j = 0;
-	      	mainClock(i, j, max);
-	      }
-    	}
-	  }, speed);
+		//Checking if the string on the page or the new String are longer
+		if(sentences[r].length > scramble.innerHTML.length) {
+			var max = sentences[r].length;
+			var min = max;
+		} else {
+			var max = scramble.innerHTML.length;
+			var min = sentences[r].length;
+		}
+
+		//Changing the characters on a timer
+		var i = 0,
+				j = 0,
+				speed = 60;
+		function mainClock(i, j, max) {
+	    setTimeout(function () {
+	    	if(j < 3 && i < min) {
+	    		scramble.innerHTML = scramble.innerHTML.replaceAt(i, randomLetter());
+	    		j++;
+	    		mainClock(i, j, max);
+	    	} else {
+	    		scramble.innerHTML = scramble.innerHTML.replaceAt(i, sentences[r][i]);
+		      if(i < min) {
+		      	i++
+		      } else {
+						max--;
+					}
+					if(i < max) {
+						j = 0;
+		      	mainClock(i, j, max);
+		      } else if(i == max) {
+		      	blocked = false;
+		      }
+	    	}
+		  }, speed);
+		}
+		mainClock(i, j, max);
 	}
-	mainClock(i, j, max);
 }
 
 //Replacing the String
