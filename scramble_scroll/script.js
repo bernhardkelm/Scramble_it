@@ -11,7 +11,7 @@ var sentences = [
 	"Play it again, Sam!",
 	"I'll be back!",
 	"You talkin’ to me?",
-	"He-e-e-e-re’s Johnny!"
+	"He-e-e-re’s Johnny!"
 ];
 
 var lipsum = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
@@ -39,6 +39,7 @@ function addElements(i) {
 var container =  document.querySelectorAll('container');
 
 //Getting the scroll position of the div elements
+//TODO: Make the animations dont stack up, reset on scroll release? At least backwards
 var timer = null;
 window.addEventListener('scroll', function() {
   if(timer !== null) {
@@ -47,6 +48,7 @@ window.addEventListener('scroll', function() {
   timer = setTimeout(function() {
   	var closestId = getDistance(sentences.length);
     if(document.getElementById(closestId).firstChild.innerHTML != document.getElementById('scramble').innerHTML) {
+			console.log(closestId);
 			scrambleIt(closestId)
 		}
   }, 200);
@@ -62,9 +64,9 @@ function getDistance(max) {
   	if(i == max - 1) {
       var curr = values[0];
       var best = 0;
-      var diff = Math.abs (curr + 90);
+      var diff = Math.abs(curr + 90);
       for (var j = 0; j < values.length; j++) {
-        var newdiff = Math.abs (values[j] + 90);
+        var newdiff = Math.abs(values[j] + 90);
         if (newdiff < diff) {
           diff = newdiff;
           curr = values[j];
@@ -88,7 +90,7 @@ function scrambleIt(string) {
 	if(blocked == false) {
 		blocked = true;
 		//Getting a non-repeating random number if required
-		if(string == false) {
+		if(string === false) {
 			do {
 				var r = Math.floor((Math.random() * sentences.length) + 0);
 			} while(r == lastr);
@@ -106,6 +108,7 @@ function scrambleIt(string) {
 			var min = sentences[r].length;
 		}
 
+		//TODO: Acceleration curve for character transition speed
 		//Changing the characters on a timer
 		var i = 0,
 				j = 0,
