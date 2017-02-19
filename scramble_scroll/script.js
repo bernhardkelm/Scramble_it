@@ -39,7 +39,6 @@ function addElements(i) {
 var container =  document.querySelectorAll('container');
 
 //Getting the scroll position of the div elements
-//TODO: Make the animations dont stack up, reset on scroll release? At least backwards
 var timer = null;
 window.addEventListener('scroll', function() {
   if(timer !== null) {
@@ -108,7 +107,6 @@ function scrambleIt(string) {
 			var min = sentences[r].length;
 		}
 
-		//TODO: Acceleration curve for character transition speed
 		//Changing the characters on a timer
 		var i = 0,
 				j = 0,
