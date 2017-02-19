@@ -11,7 +11,8 @@ var sentences = [
 	"Play it again, Sam!",
 	"I'll be back!",
 	"You talkin’ to me?",
-	"He-e-e-e-re’s Johnny!"
+	"He-e-e-e-re’s Johnny!",
+	"Well Met!"
 ];
 
 var lastr = sentences.length + 1,
