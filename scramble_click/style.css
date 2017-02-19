@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:700');
+
+html, body, * {
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  background: #fdd000;
+  color: black;
+}
+
+#scramble {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  max-width: 900px;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-transform: uppercase;
+  font-size: 4em;
+  white-space: nowrap;
+  border: 6px solid black;
+  padding: 20px 28px;
+  cursor: pointer;
+  user-select: none;
+  -o-user-select:none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  transition: max-width 0.3s ease;
+  -webkit-transition: max-width 0.3s ease;
+}
